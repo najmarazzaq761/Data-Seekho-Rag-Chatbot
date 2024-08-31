@@ -1,5 +1,4 @@
 langchain
-sqlite3 
 langchain-community
 chromadb
 langchain_chroma
