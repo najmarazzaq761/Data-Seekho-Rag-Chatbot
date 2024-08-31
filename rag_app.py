@@ -1,52 +1,53 @@
+# importing necesary libraries
 import streamlit as st
 import os
 import google.generativeai as genai
 from langchain.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain_chroma import Chroma
+from langchain.vectorstores import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 
-# Set page configuration with a custom title and icon
+# Setting page configuration 
 st.set_page_config(page_title="✨ Data Seekho Guide", page_icon="🧠", layout="wide")
 
-# Sidebar content with Data Seekho logo
+# Sidebar content 
 st.sidebar.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNl6Gok8ubOtQLNgMDmKQQGFdV5OtfJWYSOqyYTfM-uNml-vaBpavqlUXpdYdoHWed0LY&usqp=CAU", use_column_width=True)
-# st.sidebar.markdown("# Data Seekho Guide")
-st.sidebar.markdown("Welcome to the Data Seekho Guide developed by Najma Razzaq. This app is designed to provide you any information about data seekho.")
+st.sidebar.markdown("Welcome to the Data Seekho Guide developed by Najma Razzaq. This app is designed to provide you with any information about Data Seekho.")
 
-# Main title with custom style
-st.markdown("<h1 style='text-align: center; color: #FF6347;'>✨ Data Seekho Guide</h1>", unsafe_allow_html=True)
+# Main title
+st.markdown("<h1 style='text-align: center; color: white;'>✨ Data Seekho Guide</h1>", unsafe_allow_html=True)
 
 # Load data from a website
-loader = WebBaseLoader(["https://dataseekho.com/","https://dataseekho.com/free-courses/","https://dataseekho.com/join-us/","https://www.f6s.com/company/dataseekho#about", "https://dataseekho.com/about-us/"])
+loader = WebBaseLoader([
+    "https://dataseekho.com/",
+    "https://dataseekho.com/free-courses/",
+    "https://dataseekho.com/join-us/",
+    "https://www.f6s.com/company/dataseekho#about",
+    "https://dataseekho.com/about-us/"
+])
 data = loader.load()
 
-# Split data into chunks
+# Spliting  data into chunks
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000)
 docs = text_splitter.split_documents(data)
 
-# Fetch the API key from the environment
-google_api_key=os.environ["GOOGLE_API_KEY"] = "AIzaSyD4BNwGnPBR-by6aUieAhdBHyAzRXzfStc"
+# Loading the Google API key
+google_api_key = st.secrets["GOOGLE_API_KEY"]
+# genai.configure(google_api_key=google_api_key)
 
-# Check if the API key was found
-if google_api_key is None:
-    raise ValueError("API_KEY environment variable not found. Please set it.")
+# Initializing embeddings and vector store using FAISS
+embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=google_api_key)
+vectorstore = FAISS.from_documents(documents=docs, embedding=embeddings)
 
-# Initialize embeddings and vector store
-vectorstore = Chroma.from_documents(
-    documents=docs,
-    embedding=GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=google_api_key)
-)
-
-# Set up retriever and LLM
+# Seting up retriever and LLM
 retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 10})
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro", google_api_key=google_api_key, temperature=0, max_tokens=None, timeout=None)
 
-# Define the prompt template
+# Defining the prompt template
 system_prompt = (
     "You are an assistant for question-answering tasks. "
     "Use the following pieces of retrieved context to answer "
