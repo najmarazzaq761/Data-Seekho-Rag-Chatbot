@@ -1,5 +1,6 @@
 langchain
 langchain-community
+chromadb
 langchain_chroma
 langchain_core
 langchain_google_genai
