@@ -2,14 +2,21 @@
 import streamlit as st
 import os
 import google.generativeai as genai
-from langchain.document_loaders import WebBaseLoader
+from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
+from utils import create_rag_chain,get_response,load_previous_chat
+from dotenv import load_dotenv
+load_dotenv()
+
+# set the session variable
+if 'chat_history' not in st.session_state:
+    st.session_state['chat_history'] = []
 
 # Setting page configuration 
 st.set_page_config(page_title="✨ Data Seekho Guide", page_icon="🧠", layout="wide")
@@ -18,8 +25,8 @@ st.set_page_config(page_title="✨ Data Seekho Guide", page_icon="🧠", layout=
 st.sidebar.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNl6Gok8ubOtQLNgMDmKQQGFdV5OtfJWYSOqyYTfM-uNml-vaBpavqlUXpdYdoHWed0LY&usqp=CAU", use_column_width=True)
 st.sidebar.markdown("Welcome to the Data Seekho Guide developed by Najma Razzaq. This app is designed to provide you with information about Data Seekho.")
 
-# Main title
-st.markdown("<h1 style='text-align: center; color: white;'>✨ Data Seekho Guide</h1>", unsafe_allow_html=True)
+# Main titles
+st.header("✨ Data Seekho Guide")
 
 # Load data from a website
 loader = WebBaseLoader([
@@ -46,29 +53,17 @@ vectorstore = FAISS.from_documents(documents=docs, embedding=embeddings)
 retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 10})
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro", google_api_key=google_api_key, temperature=0, max_tokens=None, timeout=None)
 
-# Defining the prompt template
-system_prompt = (
-    "You are an assistant for question-answering tasks. "
-    "Use the following pieces of retrieved context to answer "
-    "the question. If you don't know the answer, say that you "
-    "don't know. Use three sentences maximum and keep the "
-    "answer concise."
-    "\n\n"
-    "{context}"
-)
+# create the RAG chain
+rag_chain=create_rag_chain(llm=llm,retriever=retriever)
 
-prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", system_prompt),
-        ("human", "{input}"),
-    ]
-)
+# load the previous chat
+with st.container():
+    load_previous_chat()
 
 # User input and response generation
-query = st.text_input("🗣️ Enter your query:")
+query = st.chat_input(placeholder="🗣️ Enter your query:")
 
 if query:
-    question_answer_chain = create_stuff_documents_chain(llm, prompt)
-    rag_chain = create_retrieval_chain(retriever, question_answer_chain)
-    response = rag_chain.invoke({"input": query})
-    st.write(response["answer"])
+    st.write(f'💬 You: {query}') 
+    response = get_response(rag_chain,query)
+    st.write(f'🤖 Bot: {response}')
