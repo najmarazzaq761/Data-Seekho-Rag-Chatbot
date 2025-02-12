@@ -1,6 +1,6 @@
-# importing libraries
 import streamlit as st
-import google.generativeai as genai
+import requests
+from bs4 import BeautifulSoup
 from langchain.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -12,37 +12,60 @@ from langchain_core.prompts import ChatPromptTemplate
 
 # Setting page configuration 
 st.set_page_config(page_title="✨ Data Seekho Guide", page_icon="🧠", layout="wide")
-
-# Sidebar content 
-st.sidebar.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNl6Gok8ubOtQLNgMDmKQQGFdV5OtfJWYSOqyYTfM-uNml-vaBpavqlUXpdYdoHWed0LY&usqp=CAU", use_column_width=True)
+st.sidebar.image("logo.png", use_container_width=True)
 st.sidebar.markdown("Welcome to the Data Seekho Guide developed by Najma Razzaq. This app is designed to provide you with any information about Data Seekho.")
-
-# Main title
 st.markdown("<h1 style='text-align: center;'><span style='color: #7abd06;'>Data</span> <span style='color: white;'>Seekho Guide</span></h1>", unsafe_allow_html=True)
 
-# Load data from a website (cache the function to prevent repeated fetching)
+# Function to fetch all internal links from the website
+@st.cache_data
+def fetch_all_links(base_url):
+    """
+    Fetch all internal links from the website's base URL.
+    """
+    response = requests.get(base_url)
+    soup = BeautifulSoup(response.text, "html.parser")
+    links = set()
+
+    for a_tag in soup.find_all("a", href=True):
+        href = a_tag["href"]
+        if href.startswith("/"):  # Internal links
+            links.add(base_url + href.strip("/"))
+        elif base_url in href: 
+            links.add(href)
+    
+    return list(links)
+
+# Load data from all pages of the website
 @st.cache_data
 def load_data():
-    loader = WebBaseLoader([
-        "https://dataseekho.com/",
-        "https://dataseekho.com/free-courses/",
-        "https://dataseekho.com/join-us/",
-        "https://www.f6s.com/company/dataseekho#about"
-        
-    ])
-    return loader.load()
+    """
+    Load data from all pages of the website.
+    """
+    base_url = "https://dataseekho.com/"
+    all_links = fetch_all_links(base_url)
 
-# Split the loaded data into chunks (cached for efficiency)
+    # Use WebBaseLoader to load data from all links
+    all_data = []
+    for link in all_links:
+        try:
+            loader = WebBaseLoader([link])
+            all_data.extend(loader.load())
+        except Exception as e:
+            st.warning(f"Failed to load data from {link}: {e}")
+    
+    return all_data
+
+# Split the loaded data into chunks
 @st.cache_data
-def split_data(data):
+def split_data(_data):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500)
-    return text_splitter.split_documents(data)
+    return text_splitter.split_documents(_data)
 
-# Create a vector store using FAISS (cache the vector store creation)
+# Create a vector store using FAISS
 @st.cache_resource
-def create_vector_store(docs):
+def create_vector_store(_docs):
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=st.secrets["GOOGLE_API_KEY"])
-    return FAISS.from_documents(documents=docs, embedding=embeddings)
+    return FAISS.from_documents(documents=_docs, embedding=embeddings)
 
 # Load and process data
 data = load_data()
@@ -78,5 +101,3 @@ if st.button("submit"):
        rag_chain = create_retrieval_chain(retriever, question_answer_chain)
        response = rag_chain.invoke({"input": query})
        st.write(response["answer"])
-       
-
