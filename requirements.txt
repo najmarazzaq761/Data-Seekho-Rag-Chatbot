@@ -7,4 +7,5 @@ langchain_core
 groq
 protobuf
 streamlit
+langchain_groq
 
