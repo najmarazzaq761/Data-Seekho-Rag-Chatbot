@@ -12,13 +12,13 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 
 # Setting page configuration 
-st.set_page_config(page_title="✨ Data Seekho Guide", page_icon="🧠", layout="wide")
+st.set_page_config(page_title="✨Data Seekho Guide", page_icon="🧠", layout="wide")
 st.markdown("<h1 style='text-align: center;'><span style='color: #7abd06;'>Data</span> <span style='color: white;'>Seekho Guide</span></h1>", unsafe_allow_html=True)
 with st.sidebar:
     st.image("logo.png", use_column_width=True)
     st.markdown("**Data Seekho Guide** app is designed to provide you with any information about **Data Seekho**.")
     st.title("Configuration")
-    temp = st.slider("Temperature", min_value=0.0, max_value=0.7, value=0.2)
+    temp = st.slider("Temperature", min_value=0.0, max_value=0.5, value=0.2)
 
 # Function to fetch all internal links from the website
 @st.cache_data
