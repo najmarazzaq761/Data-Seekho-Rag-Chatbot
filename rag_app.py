@@ -2,9 +2,9 @@
 import streamlit as st
 import requests
 from bs4 import BeautifulSoup
-from langchain.document_loaders import WebBaseLoader
+from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_groq import ChatGroq
 from langchain.chains import create_retrieval_chain
@@ -15,7 +15,7 @@ from langchain_core.prompts import ChatPromptTemplate
 st.set_page_config(page_title="✨Data Seekho Guide", page_icon="🧠", layout="wide")
 st.markdown("<h1 style='text-align: center;'><span style='color: #7abd06;'>Data</span> <span style='color: white;'>Seekho Guide</span></h1>", unsafe_allow_html=True)
 with st.sidebar:
-    st.image("logo.png", use_column_width=True)
+    st.image("logo.png", use_container_width=True)
     st.markdown("**Data Seekho Guide** app is designed to provide you with any information about **Data Seekho**.")
     st.title("Configuration")
     temp = st.slider("Temperature", min_value=0.0, max_value=0.5, value=0.2)
