@@ -1,6 +1,6 @@
 # Data Seekho RAG Application
 
-Try live demo here: https://rag-chatbot-dataseekho.streamlit.app/
+Try live demo here: https://data-seekho-rag-chatbot.streamlit.app/
 
 https://github.com/user-attachments/assets/56d4b851-552b-4f27-b1bb-957f28116624
 
