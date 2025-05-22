@@ -2,7 +2,7 @@
 
 Try live demo here: https://rag-chatbot-dataseekho.streamlit.app/
 
-https://github.com/user-attachments/assets/f996f4a2-d310-4fda-9609-4391dde14520
+https://github.com/user-attachments/assets/56d4b851-552b-4f27-b1bb-957f28116624
 
 This repository contains a Retrieval-Augmented Generation (RAG) application designed to provide detailed and relevant information about **Data Seekho**, a company focused on sharing knowledge and insights in data domains.
 
