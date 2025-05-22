@@ -8,4 +8,6 @@ groq
 protobuf
 streamlit
 langchain-groq
+sentence-transformers
+
 
