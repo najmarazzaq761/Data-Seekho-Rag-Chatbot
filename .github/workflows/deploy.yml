@@ -1,0 +1,75 @@
+Here is the YAML with added comments:
+
+```yaml
+name: CI/CD Pipeline
+
+on:
+  push:
+    # This workflow is triggered on push events for the 'main' branch
+    branches:
+      - main
+
+jobs:
+  # The CI/CD pipeline consists of three jobs: test, build, and deploy
+  test:
+    # This is the test job, which runs on an ubuntu-latest environment
+    name: Test
+    runs-on: ubuntu-latest
+    environment:
+      PYTEST_ADDOPTS: '--junit-xml=reports/junit.xml'
+    steps:
+      - name: Checkout code  # Checkout the code in the repository
+        uses: actions/checkout@v2
+      - name: Install dependencies  # Install dependencies using pip
+        run: |
+          pip install -r requirements.txt
+      - name: Run tests  # Run tests using pytest
+        run: |
+          pytest
+      - name: Publish test results  # Publish test results in JUnit format
+        uses: docker/metadata-action@v3
+        with:
+          metadata: github/actions/junit
+
+  build:
+    # This is the build job, which runs on an ubuntu-latest environment
+    name: Build
+    runs-on: ubuntu-latest
+    environment:
+      PYRAMID_ENV: production
+    steps:
+      - name: Checkout code  # Checkout the code in the repository
+        uses: actions/checkout@v2
+      - name: Install dependencies  # Install dependencies using pip
+        run: |
+          pip install -r requirements.txt
+      - name: Build and train model  # Build and train the Rasa model using `python -m rasa train`
+        run: |
+          python -m rasa train
+
+  deploy:
+    # This is the deploy job, which runs on an ubuntu-latest environment
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment:
+      # Replace with your actual API key and secret
+      REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
+      REACT_APP_API_SECRET: ${{ secrets.REACT_APP_API_SECRET }}
+    steps:
+      - name: Checkout code  # Checkout the code in the repository
+        uses: actions/checkout@v2
+      - name: Install dependencies  # Install dependencies using pip
+        run: |
+          pip install -r requirements.txt
+      - name: Login to Vercel  # Login to Vercel
+        run: |
+          vercel login
+      - name: Configure Vercel  # Configure Vercel
+        run: |
+          vercel config
+      - name: Build and deploy  # Build and deploy the project using `vercel build` and `vercel deploy`
+        run: |
+          vercel build
+          vercel deploy
+```
+I added comments before each major section explaining its purpose. I also added inline comments for complex or non-obvious steps, and highlighted any important considerations or gotchas, like the need to replace the API key and secret with actual values.
