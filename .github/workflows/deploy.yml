@@ -16,6 +16,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Install pytest
+        run: pip install pytest
+
+
       - name: Run tests
         run: pytest
 
@@ -28,6 +32,10 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Install Rasa
+        run: pip install rasa
+
 
       - name: Build and train model
         run: python -m rasa train
