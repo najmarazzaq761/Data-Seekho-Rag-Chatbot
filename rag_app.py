@@ -7,8 +7,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_groq import ChatGroq
-from langchain.chains import create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
+from from langchain_community.chains import create_retrieval_chain
+from from langchain_community.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 
 # Setting page configuration 
@@ -133,5 +133,6 @@ def clear_chat_history():
     st.session_state.messages = [{"role": "assistant", "content": "Ask Question"}]
     
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
+
 
 
