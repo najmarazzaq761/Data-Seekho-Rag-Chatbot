@@ -9,5 +9,7 @@ protobuf
 streamlit
 langchain-groq
 sentence-transformers
+langchain.text_splitter
+
 
 
