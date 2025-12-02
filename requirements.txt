@@ -1,8 +1,8 @@
 beautifulsoup4
 requests
 langchain
+langchain-core
 langchain-community
-langchain_core
 langchain-text-splitters
 faiss-cpu
 groq
@@ -10,3 +10,6 @@ protobuf
 streamlit
 langchain-groq
 sentence-transformers
+
+
+
