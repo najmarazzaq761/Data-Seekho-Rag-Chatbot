@@ -1,15 +1,12 @@
 beautifulsoup4
 requests
 langchain
-faiss-cpu
 langchain-community
 langchain_core
+langchain-text-splitters
+faiss-cpu
 groq
 protobuf
 streamlit
 langchain-groq
 sentence-transformers
-langchain.text_splitter
-
-
-
