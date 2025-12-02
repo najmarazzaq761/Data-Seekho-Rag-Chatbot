@@ -16,8 +16,8 @@ from langchain_community.vectorstores import FAISS
 from langchain_groq import ChatGroq
 
 # Chains
-from langchain.chains import create_retriever_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_community.chains import create_retriever_chain
+from langchain_community.chains.combine_documents import create_stuff_documents_chain
 
 # Prompts
 from langchain_core.prompts import ChatPromptTemplate
@@ -145,6 +145,7 @@ def clear_chat_history():
     st.session_state.messages = [{"role": "assistant", "content": "Ask Question"}]
     
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
+
 
 
 
