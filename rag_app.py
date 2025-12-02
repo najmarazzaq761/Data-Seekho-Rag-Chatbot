@@ -1,15 +1,27 @@
-#importing libraries
 import streamlit as st
 import requests
 from bs4 import BeautifulSoup
+
+# Loaders
 from langchain_community.document_loaders import WebBaseLoader
+
+# Text Splitter
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+# Embeddings & Vectorstore
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
+
+# Groq LLM
 from langchain_groq import ChatGroq
-from langchain_community.chains import create_retrieval_chain
-from langchain_community.chains.combine_documents import create_stuff_documents_chain
+
+# Chains
+from langchain.chains import create_retriever_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
+
+# Prompts
 from langchain_core.prompts import ChatPromptTemplate
+
 
 # Setting page configuration 
 st.set_page_config(page_title="✨Data Seekho Guide", page_icon="🧠", layout="wide")
@@ -133,6 +145,7 @@ def clear_chat_history():
     st.session_state.messages = [{"role": "assistant", "content": "Ask Question"}]
     
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
+
 
 
 
