@@ -3,7 +3,7 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 from langchain_community.document_loaders import WebBaseLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_groq import ChatGroq
@@ -133,3 +133,4 @@ def clear_chat_history():
     st.session_state.messages = [{"role": "assistant", "content": "Ask Question"}]
     
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
+
