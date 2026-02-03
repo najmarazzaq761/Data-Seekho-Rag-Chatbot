@@ -1,0 +1,17 @@
+beautifulsoup4
+requests
+langchain==0.3.0
+langchain-core
+langchain-community
+langchain-text-splitters
+faiss-cpu
+groq
+protobuf
+streamlit
+langchain-groq
+langchain-huggingface
+sentence-transformers
+
+
+
+

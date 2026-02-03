@@ -1,0 +1,65 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Trigger workflow on push to main branch
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install pytest
+        run: pip install pytest
+
+
+      - name: Run tests
+        run: pytest
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Rasa
+        run: pip install rasa
+
+
+      - name: Build and train model
+        run: python -m rasa train
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: [build]  # Ensures deploy runs after build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT: ${{ secrets.VERCEL_PROJECT }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        run: |
+          vercel pull --yes --token $VERCEL_TOKEN --org $VERCEL_ORG_ID --project $VERCEL_PROJECT
+          vercel build --token $VERCEL_TOKEN
+          vercel deploy --prod --token $VERCEL_TOKEN
