@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 beautifulsoup4
 requests
 langchain==0.3.0
@@ -15,3 +16,20 @@ sentence-transformers
 
 
 
+=======
+beautifulsoup4
+requests
+langchain
+langchain-core
+langchain-community
+langchain-text-splitters
+faiss-cpu
+groq
+protobuf
+streamlit
+langchain-groq
+sentence-transformers
+
+
+
+>>>>>>> 9e8d4a196c55d2698b96921fef3be6a27f1271ee
