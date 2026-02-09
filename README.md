@@ -9,7 +9,7 @@ This repository contains a Retrieval-Augmented Generation (RAG) application desi
 ## Key Technologies
 
 - **Langchain**: A powerful framework for building applications with language models.
-- **Google Gemini API**: Utilized for generating high-quality, context-aware responses.
+- **Groq api API**: Utilized for generating high-quality, context-aware responses.
 - **Streamlit**: A streamlined web app framework used to build the user interface.
 
 ## Features
@@ -22,7 +22,7 @@ This repository contains a Retrieval-Augmented Generation (RAG) application desi
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/najmarazzaq761/rag_app.py.git
+   git clone https://github.com/najmarazzaq761/Data-Seekho-Rag-Chatbot.git
    ```
 
 2. Install the required dependencies:
@@ -32,7 +32,7 @@ This repository contains a Retrieval-Augmented Generation (RAG) application desi
 
 3. Add your Google Gemini API key to the `.env` file:
    ```env
-   GOOGLE_GEMINI_API_KEY=your_api_key_here
+   GROQ_API_KEY=your_api_key_here
    ```
 
 4. Run the Streamlit app:
